@@ -1,4 +1,5 @@
 ﻿{
   "AuthSecret": "fH1NntjCAbadkxnxDb6QmmXzlkVjX4WgSCzhG5KE",
-  "BasePath": "https://uniproject-b9c81-default-rtdb.europe-west1.firebasedatabase.app/"
+  "BasePath": "https://uniproject-b9c81-default-rtdb.europe-west1.firebasedatabase.app/",
+  "API_KEY": "AIzaSyAZKbn_CRFrvs5Mnos_e_URzyROWapLVs8"
 }
