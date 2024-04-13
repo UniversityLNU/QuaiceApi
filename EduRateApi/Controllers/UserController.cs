@@ -48,10 +48,7 @@ namespace EduRateApi.Controllers
                     userId = firebaseAuthLink.User.LocalId,
                     email = model.email,
                     fullName = model.fullName,
-                    phoneNumber = model.phoneNumber,
-                    NumberOfDonatsCoins = 0,
-                    
-
+                    phoneNumber = model.phoneNumber
                 };
 
                 // Виклик функції для створення папки користувача
