@@ -1,4 +1,6 @@
-﻿namespace EduRateApi.Dtos.Fundraising
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace EduRateApi.Dtos.Fundraising
 {
     public class FundraisingDto
     {
@@ -7,6 +9,15 @@
         public string description { get; set; }
         public string fundraisingCompany { get; set; }
         public double goal { get; set; }
-        public string fundraisingType { get; set; }
+        public FundraisingType fundraisingType { get; set; }
+        public string phoneNumber {  get; set; }
+        public string email {  get; set; }
+
+
+    }
+
+    public enum FundraisingType
+    {
+        Military , Humanitarian
     }
 }
