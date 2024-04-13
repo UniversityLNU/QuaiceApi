@@ -16,5 +16,7 @@
         public double DailyMultiplier {  get; set; }
 
         public double OverallMultiplier { get; set; }
+
+        public List<ShopItem> purchasedItems {  get; set; }
     }
 }
