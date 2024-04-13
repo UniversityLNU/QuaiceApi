@@ -4,11 +4,19 @@ namespace EduRateApi.Dtos
 {
     public class LoginResponse : ServerResponse
     {
-        public string JWTToken { get; set; }
+        public string jwt { get; set; }
 
-        public LoginResponse(int statusCode, string message, string Jwt) : base(statusCode, message)
+        public string userId { get; set; }
+
+        public LoginResponse(int statusCode, string message, string jwt ,string userId) : base(statusCode, message)
         {
-            JWTToken = Jwt;
+           this.jwt = jwt;
+            this.userId = userId;
+        }
+
+        public LoginResponse(int statusCode, string message, string jwt) : base(statusCode, message)
+        {
+            this.jwt = jwt;
         }
 
         public LoginResponse(int statusCode, string message) : base(statusCode, message)
