@@ -1,6 +1,7 @@
 
 using EduRateApi.Implementation;
 using EduRateApi.Interfaces;
+using EduRateApi.Models;
 using FirebaseAdmin;
 using FirebaseAdminAuthentication.DependencyInjection.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -21,6 +22,9 @@ builder.Services.AddScoped<FirebaseAuthenticationFunctionHandler>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IFundraisingService, FundraisingService>();
+
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

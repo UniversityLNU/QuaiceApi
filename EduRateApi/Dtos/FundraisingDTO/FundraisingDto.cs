@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Runtime.Serialization;
 
-namespace EduRateApi.Dtos.Fundraising
+namespace EduRateApi.Dtos.FundraisingDTO
 {
     public class FundraisingDto
     {

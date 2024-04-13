@@ -1,4 +1,4 @@
-﻿using EduRateApi.Dtos.Fundraising;
+﻿using EduRateApi.Dtos.FundraisingDTO;
 
 namespace EduRateApi.Models
 {
