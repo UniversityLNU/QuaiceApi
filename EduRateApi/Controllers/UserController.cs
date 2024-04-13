@@ -16,6 +16,7 @@ using Microsoft.Extensions.Primitives;
 using FirebaseAdmin.Auth;
 using EduRateApi.Models;
 using FirebaseAuthException = Firebase.Auth.FirebaseAuthException;
+using System.Net;
 
 namespace EduRateApi.Controllers
 {
@@ -31,7 +32,7 @@ namespace EduRateApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<LoginResponse> RegisterUserAsync([FromBody] UserRegisterDTO model)
+        public async Task<ActionResult<LoginResponse>> RegisterUserAsync([FromBody] UserRegisterDTO model)
         {
             try
             {
@@ -55,31 +56,31 @@ namespace EduRateApi.Controllers
                 await CreateNewUserFolder(user);
 
                 // Повернення об'єкту LoginResponse з токеном Firebase
-                return new LoginResponse(statusCode: 200, message:"Succesfully registered", jwt: firebaseAuthLink.FirebaseToken , userId: firebaseAuthLink.User.LocalId);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 200, message:"Succesfully registered", jwtToken: firebaseAuthLink.FirebaseToken , userId: firebaseAuthLink.User.LocalId));
             }
             catch (FirebaseAuthException ex)
             {
                 if (ex.Reason == AuthErrorReason.EmailExists)
                 {
-                    return new LoginResponse(statusCode: 400, message: "Email already exists.");
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Email already exists."));
                 }
                 else if (ex.Reason == AuthErrorReason.InvalidEmailAddress)
                 {
-                    return new LoginResponse(statusCode: 400, message: "Invalid email format.");
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Invalid email format."));
                 }
                 else if (ex.Reason == AuthErrorReason.WeakPassword)
                 {
-                    return new LoginResponse(statusCode: 400, message: "Password is too weak.");
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Password is too weak."));
                 }
                 else
                 {
-                    return new LoginResponse(statusCode: 500, message: "Firebase Authentication error: " + ex.Message);
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 500, message: "Firebase Authentication error: " + ex.Message));
                 }
             }
             catch (Exception ex)
             {
                 // Обробка інших випадкових винятків
-                return new LoginResponse(statusCode: 500, message: "Error: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 500, message: "Error: " + ex.Message));
             }
         }
 
@@ -87,7 +88,7 @@ namespace EduRateApi.Controllers
 
 
         [HttpPost("login")]
-        public async Task<LoginResponse> LoginUserAsync([FromBody] UserLoginDTO model)
+        public async Task<ActionResult<LoginResponse>> LoginUserAsync([FromBody] UserLoginDTO model)
         {
             try
             {
@@ -98,29 +99,29 @@ namespace EduRateApi.Controllers
                 string firebaseToken = firebaseAuthLink.FirebaseToken;
 
                 FirebaseToken decodedToken = await FirebaseAdmin.Auth.FirebaseAuth.DefaultInstance
-                .VerifyIdTokenAsync(firebaseToken);
+                    .VerifyIdTokenAsync(firebaseToken);
 
                 // Додаємо токен доступу до заголовка Authorization у форматі Bearer
-
-                return new LoginResponse(message: "Succesfully logined", statusCode: 200 , jwt: firebaseToken , userId : firebaseAuthLink.User.LocalId);
+                return StatusCode((int)HttpStatusCode.OK, new LoginResponse(message: "Succesfully logined", statusCode: 200, jwtToken: firebaseToken, userId: firebaseAuthLink.User.LocalId));
             }
             catch (FirebaseAuthException ex)
             {
                 if (ex.Reason == AuthErrorReason.UserNotFound || ex.Reason == AuthErrorReason.WrongPassword)
                 {
-                    return new LoginResponse(message: "Invalid email or password.", statusCode: 400);
+                    return BadRequest(new LoginResponse(message: "Invalid email or password.", statusCode: 400));
                 }
                 else
                 {
-                    return new LoginResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500));
                 }
             }
             catch (Exception ex)
             {
                 // Обробка інших випадкових винятків
-                return new LoginResponse(message: "Error: " + ex.Message, statusCode: 500);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(message: "Error: " + ex.Message, statusCode: 500));
             }
         }
+
 
         private async Task CreateNewUserFolder(Models.User user)
         {
