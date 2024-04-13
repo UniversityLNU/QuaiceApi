@@ -4,11 +4,11 @@ namespace EduRateApi.Dtos.PostsDTO
 {
     public class AllPostsResponse : ServerResponse
     {
-        public List<Posts> posts { get; set; }
+        public List<Posts> postList  { get; set; }
 
-        public AllPostsResponse(int statusCode, string message, List<Posts> posts) : base(message, statusCode)
+        public AllPostsResponse(int statusCode, string message, List<Posts> postList) : base(message, statusCode)
         {
-            this.posts = posts;
+            this.postList = postList;
         }
     }
 }
