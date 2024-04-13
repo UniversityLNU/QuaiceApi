@@ -16,7 +16,7 @@ namespace EduRateApi.Models
 
         public double goal { get; set; }
 
-        public FundraisingType fundraisingType { get; set; }
+        public string fundraisingType { get; set; }
 
         public bool іsApproved { get; set; }
     }
