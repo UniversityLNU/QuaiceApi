@@ -1,1 +1,1 @@
-# QuaiceApi
+# EduRateApi

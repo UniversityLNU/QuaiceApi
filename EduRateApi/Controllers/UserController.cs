@@ -31,7 +31,7 @@ namespace EduRateApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ServerResponse> RegisterUserAsync([FromBody] UserRegisterDTO model)
+        public async Task<LoginResponse> RegisterUserAsync([FromBody] UserRegisterDTO model)
         {
             try
             {
@@ -52,38 +52,40 @@ namespace EduRateApi.Controllers
                 // Виклик функції для створення папки користувача
                 await CreateNewUserFolder(user);
 
-                return new ServerResponse(message: firebaseAuthLink.FirebaseToken, statusCode: 200);
+                // Повернення об'єкту LoginResponse з токеном Firebase
+                return new LoginResponse(statusCode: 200, message:"Succesfully registered", Jwt: firebaseAuthLink.FirebaseToken);
             }
             catch (FirebaseAuthException ex)
             {
                 if (ex.Reason == AuthErrorReason.EmailExists)
                 {
-                    return new ServerResponse(message: "Email already exists.", statusCode: 400);
+                    return new LoginResponse(statusCode: 400, message: "Email already exists.");
                 }
                 else if (ex.Reason == AuthErrorReason.InvalidEmailAddress)
                 {
-                    return new ServerResponse(message: "Invalid email format.", statusCode: 400);
+                    return new LoginResponse(statusCode: 400, message: "Invalid email format.");
                 }
                 else if (ex.Reason == AuthErrorReason.WeakPassword)
                 {
-                    return new ServerResponse(message: "Password is too weak.", statusCode: 400);
+                    return new LoginResponse(statusCode: 400, message: "Password is too weak.");
                 }
                 else
                 {
-                    return new ServerResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
+                    return new LoginResponse(statusCode: 500, message: "Firebase Authentication error: " + ex.Message);
                 }
             }
             catch (Exception ex)
             {
                 // Обробка інших випадкових винятків
-                return new ServerResponse(message: "Error: " + ex.Message, statusCode: 500);
+                return new LoginResponse(statusCode: 500, message: "Error: " + ex.Message);
             }
         }
 
 
 
+
         [HttpPost("login")]
-        public async Task<ServerResponse> LoginUserAsync([FromBody] UserRegisterDTO model)
+        public async Task<LoginResponse> LoginUserAsync([FromBody] UserRegisterDTO model)
         {
             try
             {
@@ -98,23 +100,23 @@ namespace EduRateApi.Controllers
 
                 // Додаємо токен доступу до заголовка Authorization у форматі Bearer
 
-                return new ServerResponse(message: firebaseToken, statusCode: 200);
+                return new LoginResponse(message: "Succesfully logined", statusCode: 200 , Jwt: firebaseToken);
             }
             catch (FirebaseAuthException ex)
             {
                 if (ex.Reason == AuthErrorReason.UserNotFound || ex.Reason == AuthErrorReason.WrongPassword)
                 {
-                    return new ServerResponse(message: "Invalid email or password.", statusCode: 400);
+                    return new LoginResponse(message: "Invalid email or password.", statusCode: 400);
                 }
                 else
                 {
-                    return new ServerResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
+                    return new LoginResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
                 }
             }
             catch (Exception ex)
             {
                 // Обробка інших випадкових винятків
-                return new ServerResponse(message: "Error: " + ex.Message, statusCode: 500);
+                return new LoginResponse(message: "Error: " + ex.Message, statusCode: 500);
             }
         }
 
@@ -166,16 +168,16 @@ namespace EduRateApi.Controllers
                 string uid = decodedToken.Uid;
 
                 // Повернути тільки Uid користувача
-                return new ServerResponse(message: $"{uid}", statusCode: 200);
+                return new LoginResponse(message: $"{uid}", statusCode: 200);
             }
             catch (FirebaseAuthException ex)
             {
-                return new ServerResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
+                return new LoginResponse(message: "Firebase Authentication error: " + ex.Message, statusCode: 500);
             }
             catch (Exception ex)
             {
                 // Обробка інших випадкових винятків
-                return new ServerResponse(message: "Error: " + ex.Message, statusCode: 500);
+                return new LoginResponse(message: "Error: " + ex.Message, statusCode: 500);
             }
         }
 
