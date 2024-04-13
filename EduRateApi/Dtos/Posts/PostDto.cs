@@ -2,11 +2,26 @@
 {
     public class PostDto
     {
-        public string postId { get; set; }
+        public string userId { get; set; }
         public string creatorFullName { get; set; }
         public string description { get; set; }
         public long dateOfCreation { get; set; }
         public string fundraisingId { get; set; }
         public List<string> attachedPhotos { get; set; }
+
+        public PostDto (string userId, string creatorFullName,
+            string description,
+            long dateOfCreation,
+            string fundraisingId,
+            List<string> attachedPhotos
+        )
+        {
+            this.userId = userId;
+            this.creatorFullName = creatorFullName;
+            this.description = description;
+            this.dateOfCreation = dateOfCreation;
+            this.attachedPhotos = attachedPhotos;
+            this.fundraisingId = fundraisingId;
+        }
     }
 }
