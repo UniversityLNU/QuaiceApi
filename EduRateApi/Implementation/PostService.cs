@@ -28,22 +28,22 @@ namespace EduRateApi.Implementation
                         {
                             var posts = response.ResultAs<Dictionary<string, Posts>>();
                             var postList = posts.Values.ToList();
-                            return new AllPostsResponse(posts: postList, message: "OK", statusCode: 200);
+                            return new AllPostsResponse(postList: postList, message: "OK", statusCode: 200);
                         }
                         else
                         {
-                            return new AllPostsResponse(posts: new List<Posts>(), message: "Non objects", statusCode: 200);
+                            return new AllPostsResponse(postList: new List<Posts>(), message: "Non objects", statusCode: 200);
                         }
                     }
                     else
                     {
-                        return new AllPostsResponse(posts: new List<Posts>(), message: "", statusCode: 400);
+                        return new AllPostsResponse(postList: new List<Posts>(), message: "", statusCode: 400);
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new AllPostsResponse(posts: new List<Posts>(), message: "", statusCode: 500);
+                return new AllPostsResponse(postList: new List<Posts>(), message: "", statusCode: 500);
             }
         }
 
