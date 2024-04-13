@@ -62,15 +62,15 @@ namespace EduRateApi.Controllers
             {
                 if (ex.Reason == AuthErrorReason.EmailExists)
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Email already exists."));
+                    return StatusCode((int)HttpStatusCode.BadRequest, new LoginResponse(statusCode: 400, message: "Email already exists."));
                 }
                 else if (ex.Reason == AuthErrorReason.InvalidEmailAddress)
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Invalid email format."));
+                    return StatusCode((int)HttpStatusCode.BadRequest, new LoginResponse(statusCode: 400, message: "Invalid email format."));
                 }
                 else if (ex.Reason == AuthErrorReason.WeakPassword)
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new LoginResponse(statusCode: 400, message: "Password is too weak."));
+                    return StatusCode((int)HttpStatusCode.BadRequest, new LoginResponse(statusCode: 400, message: "Password is too weak."));
                 }
                 else
                 {
