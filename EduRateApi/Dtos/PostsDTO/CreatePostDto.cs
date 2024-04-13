@@ -1,4 +1,4 @@
-﻿namespace EduRateApi.Dtos.Posts
+﻿namespace EduRateApi.Dtos.PostsDTO
 {
     public class CreatePostDto
     {

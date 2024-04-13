@@ -9,6 +9,8 @@
 
         public string fundraisingId { get; set;}
 
-        public List<string> attachedPhotos { get; set; }   
+        public List<string> attachedPhotos { get; set; }
+
+       
     }
 }
