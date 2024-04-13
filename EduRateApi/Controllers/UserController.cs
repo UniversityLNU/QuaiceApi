@@ -55,7 +55,7 @@ namespace EduRateApi.Controllers
                 await CreateNewUserFolder(user);
 
                 // Повернення об'єкту LoginResponse з токеном Firebase
-                return new LoginResponse(statusCode: 200, message:"Succesfully registered", Jwt: firebaseAuthLink.FirebaseToken);
+                return new LoginResponse(statusCode: 200, message:"Succesfully registered", jwt: firebaseAuthLink.FirebaseToken , userId: firebaseAuthLink.User.LocalId);
             }
             catch (FirebaseAuthException ex)
             {
@@ -102,7 +102,7 @@ namespace EduRateApi.Controllers
 
                 // Додаємо токен доступу до заголовка Authorization у форматі Bearer
 
-                return new LoginResponse(message: "Succesfully logined", statusCode: 200 , Jwt: firebaseToken);
+                return new LoginResponse(message: "Succesfully logined", statusCode: 200 , jwt: firebaseToken , userId : firebaseAuthLink.User.LocalId);
             }
             catch (FirebaseAuthException ex)
             {
