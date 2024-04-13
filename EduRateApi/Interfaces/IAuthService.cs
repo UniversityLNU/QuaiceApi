@@ -1,4 +1,4 @@
-﻿using EduRateApi.Dtos;
+﻿using EduRateApi.Dtos.AuthDTO;
 using EduRateApi.Models;
 
 namespace EduRateApi.Interfaces
