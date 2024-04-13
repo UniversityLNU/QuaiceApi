@@ -40,13 +40,15 @@ namespace EduRateApi.Controllers
                             Fundraising fundraising = new Fundraising
                             {
                                 fundraisingId = fundraisingId,
+                                phoneNumber = fundraisingDto.phoneNumber,
+                                email = fundraisingDto.email,
                                 title = fundraisingDto.title,
                                 fundraisingUrl = fundraisingDto.fundraisingUrl,
                                 description = fundraisingDto.description,
                                 fundraisingCompany = fundraisingDto.fundraisingCompany,
                                 goal = fundraisingDto.goal,
                                 fundraisingType = fundraisingDto.fundraisingType,
-                                IsApproved = false 
+                                іsApproved = false 
                             };
 
                             var setResponse = await client.SetAsync($"Fundraising/{fundraising.fundraisingId}", fundraising);
@@ -112,6 +114,48 @@ namespace EduRateApi.Controllers
                 return StatusCode(500, $"An error occurred while retrieving fundraising: {ex.Message}");
             }
         }
+
+        [HttpGet("GetAllFundraisings")]
+        public async Task<ActionResult<List<Fundraising>>> GetAllFundraisings()
+        {
+            try
+            {
+                var firebaseConfigPath = "Config/firebaseConfig.json";
+                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
+                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
+
+                using (var client = new FireSharp.FirebaseClient(config))
+                {
+                    if (client != null)
+                    {
+                        var response = await client.GetAsync("Fundraising");
+                        if (response.Body != "null") // якщо не null, то є записи у базі даних
+                        {
+                            // Якщо записи існують, отримуємо їх та повертаємо список об'єктів Fundraising
+                            var data = response.ResultAs<Dictionary<string, Fundraising>>();
+                            var fundraisings = data.Values.ToList();
+                            return Ok(fundraisings);
+                        }
+                        else
+                        {
+                            // Якщо записів немає, повертаємо порожній список
+                            return Ok(new List<Fundraising>());
+                        }
+                    }
+                    else
+                    {
+                        // Повертаємо помилку, якщо відсутнє з'єднання з Firebase
+                        return BadRequest("Firebase connection failed");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Повертаємо повідомлення про помилку у разі виникнення виключення
+                return StatusCode(500, $"An error occurred while retrieving fundraisings: {ex.Message}");
+            }
+        }
+
 
         // Метод для генерації нового FundraisingId
         private string GenerateNewFundraisingId()
