@@ -2,8 +2,19 @@
 {
     public class User
     {
-        public string UserId { get; set; }
-        public string Email { get; set; }
-        /////
+        public string userId { get; set; }
+        public string email { get; set; }
+
+        public string fullName { get; set; }
+
+        public string phoneNumber { get; set; }
+
+        public double NumberOfDonatsCoins { get; set; }
+
+        public DateTime LastDonateTime {  get; set; }
+        
+        public double DailyMultiplier {  get; set; }
+
+        public double OverallMultiplier { get; set; }
     }
 }
