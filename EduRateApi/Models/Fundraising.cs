@@ -2,16 +2,18 @@
 {
     public class Fundraising
     {
-        public string FundraisingId {  get; set; }
+        public string fundraisingId {  get; set; }
 
-        public string Title { get; set; }
+        public string title { get; set; }
 
-        public string FundraisingUrl { get; set; }
-        public string Description { get; set; }
-        public string FundraisingCompany { get; set; }
+        public string fundraisingUrl { get; set; }
+        public string description { get; set; }
+        public string fundraisingCompany { get; set; }
 
-        public double Goal { get; set; }
+        public double goal { get; set; }
 
-        public string FundraisingType { get; set; }
+        public string fundraisingType { get; set; }
+
+        public bool IsApproved { get; set; }
     }
 }
