@@ -2,13 +2,13 @@
 {
     public class Posts
     {
-        public string CreatorFullName { get; set; }
-        public string Description { get; set;}
+        public string creatorFullName { get; set; }
+        public string description { get; set;}
+        public string userId { get; set; }
+        public long dateOfCreation { get; set; }
 
-        public long DateOfCreation { get; set; }
+        public string fundraisingId { get; set;}
 
-        public string FundraisingId { get; set;}
-
-        public List<string> AttachedPhotos { get; set; }   
+        public List<string> attachedPhotos { get; set; }   
     }
 }
