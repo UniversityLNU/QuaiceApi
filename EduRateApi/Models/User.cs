@@ -14,9 +14,9 @@
         public DateTime lastDonateTime {  get; set; }
         
         public double dailyMultiplier {  get; set; }
-
-        public double overallMultiplier { get; set; }
-
         public List<ShopItem> purchasedItems {  get; set; }
+        public double OverallMultiplier { get; set; }
+        public int dailyCount { get; set; }
+        public int strickCount { get; set; }
     }
 }

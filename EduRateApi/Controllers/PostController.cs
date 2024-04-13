@@ -26,7 +26,33 @@ namespace EduRateApi.Controllers
                 {
                     if (client != null)
                     {
+                        var creationDay = new DateTime(post.dateOfCreation);
 
+                        var response = await client.GetAsync($"Users/{post.userId}");
+                        var user = response.ResultAs<User>();
+
+                        if (user.LastDonateTime != creationDay)
+                        {
+                            user.dailyCount = 0;
+                        }
+
+                        if (user.dailyCount != 2)
+                        {
+                            user.dailyCount += 1;
+                        }
+
+                        var strickGap = new DateTime(post.dateOfCreation) - creationDay;
+
+                        if (strickGap.Days > 1)
+                        {
+                            user.strickCount = 0;
+                        }
+                        else if (user.LastDonateTime.Day != creationDay.Day)
+                        {
+                            user.strickCount += 1;
+                        }
+                        user.LastDonateTime = new DateTime(post.dateOfCreation);
+                        var updateUser = await client.UpdateAsync($"Users/{user.userId}", user);
                         var newPostId = Guid.NewGuid().ToString();
                             var setUserPost = await client.SetAsync($"Posts/{newPostId}/", new Posts
                             {
@@ -52,6 +78,17 @@ namespace EduRateApi.Controllers
                 Console.WriteLine("An error occurred while uploading teachers to Firebase: " + ex.Message);
                 return new CreatePostResponseDto();
             }
+        }
+
+
+        public User Calculate(User  user)
+        {
+            const double dailyMult = 0.05;
+            const double strickMult = 0.01;
+
+            user.NumberOfDonatsCoins += (user.dailyCount * dailyMult + 1) * (user.strickCount * strickMult + 1) * 2;
+
+            return user;
         }
 
         [HttpGet("GetPostById/{postId}")]
