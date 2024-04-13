@@ -13,7 +13,7 @@ namespace EduRateApi.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("UploadUserPost")]
         public async Task<CreatePostResponseDto> UploadUserPost([FromBody] PostDto post)
         {
             try

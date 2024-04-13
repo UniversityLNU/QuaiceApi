@@ -48,7 +48,9 @@ namespace EduRateApi.Controllers
                     userId = firebaseAuthLink.User.LocalId,
                     email = model.email,
                     fullName = model.fullName,
-                    phoneNumber = model.phoneNumber
+                    phoneNumber = model.phoneNumber,
+                    NumberOfDonatsCoins = 0,
+                    
 
                 };
 

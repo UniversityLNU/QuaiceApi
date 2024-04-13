@@ -2,6 +2,8 @@
 {
     public class BuyShopItemDto
     {
-        public string buyStatus { get; set; }
+        public string userId { get; set; }
+
+        public string itemId { get; set; }
     }
 }

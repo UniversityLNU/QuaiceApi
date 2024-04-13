@@ -9,13 +9,13 @@
 
         public string phoneNumber { get; set; }
 
-        public double NumberOfDonatsCoins { get; set; }
+        public double numberOfDonatsCoins { get; set; }
 
-        public DateTime LastDonateTime {  get; set; }
+        public DateTime lastDonateTime {  get; set; }
         
-        public double DailyMultiplier {  get; set; }
+        public double dailyMultiplier {  get; set; }
 
-        public double OverallMultiplier { get; set; }
+        public double overallMultiplier { get; set; }
 
         public List<ShopItem> purchasedItems {  get; set; }
     }

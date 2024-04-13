@@ -1,11 +1,11 @@
 ﻿namespace EduRateApi.Models
 {
-    public abstract class ServerResponse
+    public class ServerResponse
     {
         public int statusCode { get; set; }
         public string message { get; set; }
 
-        protected ServerResponse(int statusCode, string message)
+        public ServerResponse(string message , int statusCode)
         {
             this.statusCode = statusCode;
             this.message = message;

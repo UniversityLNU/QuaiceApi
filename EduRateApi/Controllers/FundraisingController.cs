@@ -16,7 +16,7 @@ namespace EduRateApi.Controllers
     {
 
         [HttpPost("UploadFundrasing")]
-        public async Task<ServerResponse> UploadFundrasing([FromBody] FundraisingDto fundraisingDto)
+        public async Task<ActionResult<ServerResponse>> UploadFundrasing([FromBody] FundraisingDto fundraisingDto)
         {
             try
             {
@@ -32,12 +32,7 @@ namespace EduRateApi.Controllers
                     if (client != null)
                     {
                         var response = await client.GetAsync($"Fundraising/{fundraisingId}");
-                        if (response.Body != "null") // якщо не null, то запис вже існує у базі даних
-                        {
-                            return new LoginResponse(message: "Already Exist", statusCode: 500);
-                        }
-                        else
-                        {
+
                             Fundraising fundraising = new Fundraising
                             {
                                 fundraisingId = fundraisingId,
@@ -56,23 +51,23 @@ namespace EduRateApi.Controllers
                             if (setResponse.StatusCode == System.Net.HttpStatusCode.OK)
                             {
                                 Console.WriteLine($"Fundraising {fundraising.fundraisingId} uploaded successfully");
-                                return new LoginResponse(message: "Fundraising uploaded successfully", statusCode: 200);
+                                return StatusCode((int)HttpStatusCode.OK, new ServerResponse(message: "Fundraising uploaded successfully", statusCode: 200));
                             }
                             else
                             {
-                                return new LoginResponse(message: "Failed to upload fundraising", statusCode: 400);
+                                return StatusCode((int)HttpStatusCode.BadRequest, new ServerResponse(message: "Failed to upload fundraising", statusCode: 400));
                             }
-                        }
+                        
                     }
                     else
                     {
-                        return new LoginResponse(message: "Firebase connection failed", statusCode: 400);
+                        return StatusCode((int)HttpStatusCode.BadRequest, new ServerResponse(message: "Firebase connection failed", statusCode: 400));
                     }
                 }
             }
             catch (Exception ex)
             {
-                return new LoginResponse(message: "Error occurred while uploading fundraising to Firebase", statusCode: 500);
+                return StatusCode((int)HttpStatusCode.BadRequest, new ServerResponse(message: "Error occurred while uploading fundraising to Firebase", statusCode: 500));
             }
         }
 
