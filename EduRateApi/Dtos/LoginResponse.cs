@@ -8,18 +8,18 @@ namespace EduRateApi.Dtos
 
         public string userId { get; set; }
 
-        public LoginResponse(int statusCode, string message, string jwtToken, string userId) : base(statusCode, message)
+        public LoginResponse(int statusCode, string message, string jwtToken, string userId) : base(message, statusCode)
         {
            this.jwtToken = jwtToken;
             this.userId = userId;
         }
 
-        public LoginResponse(int statusCode, string message, string jwtToken) : base(statusCode, message)
+        public LoginResponse(int statusCode, string message, string jwtToken) : base(message, statusCode)
         {
             this.jwtToken = jwtToken;
         }
 
-        public LoginResponse(int statusCode, string message) : base(statusCode, message)
+        public LoginResponse(int statusCode, string message) : base(message, statusCode)
         {
         }
     }
