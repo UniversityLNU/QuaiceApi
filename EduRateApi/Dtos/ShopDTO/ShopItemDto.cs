@@ -1,4 +1,4 @@
-﻿namespace EduRateApi.Dtos.Shop
+﻿namespace EduRateApi.Dtos.ShopDTO
 {
     public class ShopItemDto
     { 

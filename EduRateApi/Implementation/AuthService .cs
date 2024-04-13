@@ -9,10 +9,12 @@ namespace EduRateApi.Implementation
 {
     public class AuthService : IAuthService
     {
-        private const string API_KEY = "AIzaSyAZKbn_CRFrvs5Mnos_e_URzyROWapLVs8";
-
-        public AuthService()
+        private readonly IFirebaseConnectingService _connectingService;
+        private readonly string API_KEY;
+        public AuthService(IFirebaseConnectingService _connectingService)
         {
+            this._connectingService = _connectingService;
+            API_KEY = _connectingService.GetApiKey();
         }
 
         public async Task<ServerResponse> GetUserInfoAsync(string firebaseToken)
@@ -24,7 +26,6 @@ namespace EduRateApi.Implementation
 
                 string uid = decodedToken.Uid;
 
-                // Повернути тільки Uid користувача
                 return new ServerResponse(message: $"{uid}", statusCode: 200);
             }
             catch (Firebase.Auth.FirebaseAuthException ex)
@@ -33,7 +34,6 @@ namespace EduRateApi.Implementation
             }
             catch (Exception ex)
             {
-                // Обробка інших випадкових винятків
                 return new ServerResponse(message: "Error: " + ex.Message, statusCode: 500);
             }
         }
@@ -45,13 +45,11 @@ namespace EduRateApi.Implementation
                 FirebaseAuthProvider firebaseAuthProvider = new FirebaseAuthProvider(new Firebase.Auth.FirebaseConfig(API_KEY));
                 FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.SignInWithEmailAndPasswordAsync(model.email, model.password);
 
-                // Отримуємо токен доступу
                 string firebaseToken = firebaseAuthLink.FirebaseToken;
 
                 FirebaseToken decodedToken = await FirebaseAdmin.Auth.FirebaseAuth.DefaultInstance
                     .VerifyIdTokenAsync(firebaseToken);
 
-                // Додаємо токен доступу до заголовка Authorization у форматі Bearer
                 return new LoginResponse(message: "Succesfully logined", statusCode: 200, jwtToken: firebaseToken, userId: firebaseAuthLink.User.LocalId);
             }
             catch (Firebase.Auth.FirebaseAuthException ex)
@@ -67,7 +65,6 @@ namespace EduRateApi.Implementation
             }
             catch (Exception ex)
             {
-                // Обробка інших випадкових винятків
                 return new LoginResponse(message: "Error: " + ex.Message, statusCode: 500);
             }
         }
@@ -80,7 +77,6 @@ namespace EduRateApi.Implementation
 
                 FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.CreateUserWithEmailAndPasswordAsync(model.email, model.password);
 
-                // Створення об'єкта користувача з базовою інформацією
                 Models.User user = new Models.User
                 {
                     userId = firebaseAuthLink.User.LocalId,
@@ -89,10 +85,8 @@ namespace EduRateApi.Implementation
                     phoneNumber = model.phoneNumber
                 };
 
-                // Виклик функції для створення папки користувача
                 await CreateNewUserFolder(user);
 
-                // Повернення об'єкту LoginResponse з токеном Firebase
                 return new LoginResponse(statusCode: 200, message: "Succesfully registered", jwtToken: firebaseAuthLink.FirebaseToken, userId: firebaseAuthLink.User.LocalId);
             }
             catch (Firebase.Auth.FirebaseAuthException ex)
@@ -116,12 +110,11 @@ namespace EduRateApi.Implementation
             }
             catch (Exception ex)
             {
-                // Обробка інших випадкових винятків
                 return new LoginResponse(statusCode: 500, message: "Error: " + ex.Message);
             }
         }
 
-        private async Task CreateNewUserFolder(Models.User user)
+        private async Task<ServerResponse> CreateNewUserFolder(Models.User user)
         {
             try
             {
@@ -133,26 +126,25 @@ namespace EduRateApi.Implementation
                 {
                     if (client != null)
                     {
-                        // Створення нової папки користувача в базі даних
                         var setResponse = await client.SetAsync($"Users/{user.userId}", user);
                         if (setResponse.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            Console.WriteLine($"User folder for user with ID {user.userId} created successfully");
+                            return new ServerResponse($"User folder for user with ID {user.userId} created successfully", 200);
                         }
                         else
                         {
-                            Console.WriteLine($"Failed to create user folder for user with ID {user.userId}");
+                            return new ServerResponse($"Failed to create user folder for user with ID {user.userId}", 500);
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Firebase connection failed");
+                        return new ServerResponse("Firebase connection failed", 400);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while creating user folder in Firebase: " + ex.Message);
+                return new ServerResponse("An error occurred while creating user folder in Firebase: " + ex.Message, 500);
             }
         }
     }

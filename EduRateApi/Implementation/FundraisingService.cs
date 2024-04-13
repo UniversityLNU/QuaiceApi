@@ -10,15 +10,16 @@ namespace EduRateApi.Implementation
 {
     public class FundraisingService : IFundraisingService
     {
+        private readonly IFirebaseConnectingService _firebaseConnectingService;
+        public FundraisingService(IFirebaseConnectingService firebaseConnectingService)
+        {
+            _firebaseConnectingService = firebaseConnectingService;
+        }
         public async Task<ServerResponse> ApproveFundraising(string fundraisingId)
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -64,11 +65,7 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -102,11 +99,7 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -137,11 +130,7 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -179,17 +168,13 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var _client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
-                    if (_client != null)
+                    if (client != null)
                     {
                         string fundraisingId = Guid.NewGuid().ToString();
 
-                        var response = await _client.GetAsync($"Fundraising/{fundraisingId}");
+                        var response = await client.GetAsync($"Fundraising/{fundraisingId}");
 
                         Fundraising fundraising = new Fundraising
                         {
@@ -205,11 +190,10 @@ namespace EduRateApi.Implementation
                             іsApproved = false
                         };
 
-                        var setResponse = await _client.SetAsync($"Fundraising/{fundraising.fundraisingId}", fundraising);
+                        var setResponse = await client.SetAsync($"Fundraising/{fundraising.fundraisingId}", fundraising);
 
                         if (setResponse.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            Console.WriteLine($"Fundraising {fundraising.fundraisingId} uploaded successfully");
                             return new ServerResponse(message: "Fundraising uploaded successfully", statusCode: 200);
                         }
                         else

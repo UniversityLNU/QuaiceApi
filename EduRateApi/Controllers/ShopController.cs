@@ -1,5 +1,5 @@
 ﻿using EduRateApi.Dtos;
-using EduRateApi.Dtos.Shop;
+using EduRateApi.Dtos.ShopDTO;
 using EduRateApi.Models;
 using Firebase.Auth;
 using FirebaseAdmin.Auth;

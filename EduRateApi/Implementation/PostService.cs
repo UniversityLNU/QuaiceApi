@@ -3,7 +3,9 @@ using EduRateApi.Dtos.FundraisingDTO;
 using EduRateApi.Dtos.PostsDTO;
 using EduRateApi.Interfaces;
 using EduRateApi.Models;
+using FireSharp;
 using FireSharp.Config;
+using FireSharp.Response;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 
@@ -11,20 +13,21 @@ namespace EduRateApi.Implementation
 {
     public class PostService : IPostService
     {
+        private readonly IFirebaseConnectingService _firebaseConnectingService;
+        public PostService( IFirebaseConnectingService firebaseConnectingService)
+        {
+                _firebaseConnectingService = firebaseConnectingService;
+        }
         public async Task<AllPostsResponse> GetAllPosts()
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
                         var response = await client.GetAsync("Posts");
-                        if (response.Body != "null") 
+                        if (response.Body != "null")
                         {
                             var posts = response.ResultAs<Dictionary<string, Posts>>();
                             var postList = posts.Values.ToList();
@@ -47,16 +50,11 @@ namespace EduRateApi.Implementation
             }
         }
 
-
         public async Task<PostResponse> GetPostById(string postId)
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -96,11 +94,7 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _firebaseConnectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
@@ -137,8 +131,14 @@ namespace EduRateApi.Implementation
                             fundraisingId = post.fundraisingId,
                             attachedPhotos = post.attachedPhotos,
                         });
-
-                        return new CreatePostResponseDto("Post uploaded successfully", 200, newPostId, post.attachedPhotos);
+                        if (setUserPost.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            return new CreatePostResponseDto("Post uploaded successfully", 200, newPostId, post.attachedPhotos);
+                        }
+                        else
+                        {
+                            return new CreatePostResponseDto(message: "Failed to upload fundraising", statusCode: 400, photoLinks:null ,  postId: null);
+                        }
                     }
                     else
                     {

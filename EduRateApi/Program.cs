@@ -18,9 +18,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme, (o) => { });
 
 builder.Services.AddSingleton(FirebaseApp.Create());
+
+builder.Services.AddScoped<IFirebaseConnectingService, FirebaseConnectingService>();
+
 builder.Services.AddScoped<FirebaseAuthenticationFunctionHandler>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IFundraisingService, FundraisingService>();
 
