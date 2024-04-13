@@ -129,8 +129,15 @@ namespace EduRateApi.Controllers
                         {
                             // Якщо записи існують, отримуємо їх та повертаємо список об'єктів Fundraising
                             var data = response.ResultAs<Dictionary<string, Fundraising>>();
-                            var fundraisings = data.Values.ToList();
-                            return Ok(fundraisings);
+                            var onlyApproved = new List<Fundraising>();
+                            foreach (var fundraising in data)
+                            {
+                                if (fundraising.Value.іsApproved == true)
+                                {
+                                    onlyApproved.Add(fundraising.Value);
+                                }
+                            }
+                            return Ok(onlyApproved);
                         }
                         else
                         {

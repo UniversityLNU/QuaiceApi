@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Runtime.Serialization;
 
 namespace EduRateApi.Dtos.Fundraising
 {
@@ -9,15 +10,12 @@ namespace EduRateApi.Dtos.Fundraising
         public string description { get; set; }
         public string fundraisingCompany { get; set; }
         public double goal { get; set; }
-        public FundraisingType fundraisingType { get; set; }
+        public string fundraisingType { get; set; }
         public string phoneNumber {  get; set; }
         public string email {  get; set; }
 
 
     }
 
-    public enum FundraisingType
-    {
-        Military , Humanitarian
-    }
+
 }

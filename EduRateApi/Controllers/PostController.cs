@@ -30,8 +30,8 @@ namespace EduRateApi.Controllers
 
                         var response = await client.GetAsync($"Users/{post.userId}");
                         var user = response.ResultAs<User>();
-
-                        if (user.LastDonateTime != creationDay)
+                        user = Calculate(user);
+                        if (user.lastDonateTime != creationDay)
                         {
                             user.dailyCount = 0;
                         }
@@ -47,11 +47,11 @@ namespace EduRateApi.Controllers
                         {
                             user.strickCount = 0;
                         }
-                        else if (user.LastDonateTime.Day != creationDay.Day)
+                        else if (user.lastDonateTime.Day != creationDay.Day)
                         {
                             user.strickCount += 1;
                         }
-                        user.LastDonateTime = new DateTime(post.dateOfCreation);
+                        user.lastDonateTime = new DateTime(post.dateOfCreation);
                         var updateUser = await client.UpdateAsync($"Users/{user.userId}", user);
                         var newPostId = Guid.NewGuid().ToString();
                             var setUserPost = await client.SetAsync($"Posts/{newPostId}/", new Posts
@@ -81,12 +81,12 @@ namespace EduRateApi.Controllers
         }
 
 
-        public User Calculate(User  user)
+        private User Calculate(User  user)
         {
             const double dailyMult = 0.05;
             const double strickMult = 0.01;
 
-            user.NumberOfDonatsCoins += (user.dailyCount * dailyMult + 1) * (user.strickCount * strickMult + 1) * 2;
+            user.numberOfDonatsCoins += (user.dailyCount * dailyMult + 1) * (user.strickCount * strickMult + 1) * 2;
 
             return user;
         }

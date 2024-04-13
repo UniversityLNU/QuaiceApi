@@ -97,6 +97,59 @@ namespace EduRateApi.Controllers
             }
         }
 
+        [HttpGet("GetActiveShopItems")]
+        public async Task<List<ShopItem>> GetActiveShopItems()
+        {
+            try
+            {
+                var firebaseConfigPath = "Config/firebaseConfig.json";
+                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
+                var config = JsonConvert.DeserializeObject<FireSharp.Config.FirebaseConfig>(configJson);
+
+                using (var client = new FireSharp.FirebaseClient(config))
+                {
+                    if (client != null)
+                    {
+                        var response = await client.GetAsync("Shop");
+                        if (response.Body != "null") // якщо не null, то є записи у базі даних
+                        {
+                            // Отримуємо дані у вигляді словника
+                            var data = response.ResultAs<Dictionary<string, ShopItem>>();
+                            var activeShopItems = new List<ShopItem>();
+
+                            // Перебираємо усі елементи словника
+                            foreach (var pair in data)
+                            {
+                                // Якщо елемент не відключений (disabled = false), додаємо його до списку
+                                if (!pair.Value.disabled)
+                                {
+                                    activeShopItems.Add(pair.Value);
+                                }
+                            }
+
+                            return activeShopItems;
+                        }
+                        else
+                        {
+                            // Якщо записів немає, повертаємо порожній список
+                            return new List<ShopItem>();
+                        }
+                    }
+                    else
+                    {
+                        // Повертаємо помилку, якщо відсутнє з'єднання з Firebase
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Повертаємо повідомлення про помилку у разі виникнення виключення
+                return null;
+            }
+        }
+
+
 
         [HttpPost("BuyItemInShop")]
         public async Task<ActionResult<ServerResponse>> BuyItemInShop([FromBody] BuyShopItemDto itemDto)
