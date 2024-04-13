@@ -26,23 +26,9 @@ namespace EduRateApi.Controllers
                 {
                     if (client != null)
                     {
-                        
-                        var getUserPosts = await client.GetAsync($"Posts/{post.userId}");
-                        if (getUserPosts == null)
-                        {
-                            var setUserPost = await client.SetAsync($"Posts/{post.userId}/1/", new Posts { 
-                                CreatorFullName = post.creatorFullName,
-                                Description = post.description,
-                                DateOfCreation = post.dateOfCreation,
-                                FundraisingId = post.fundraisingId,
-                                AttachedPhotos = post.attachedPhotos,
-                            });
-                            return new CreatePostResponseDto("1", post.attachedPhotos);
-                        }
-                        else
-                        {
-                            var responseContent = getUserPosts.Body.Count();
-                            var setUserPost = await client.SetAsync($"Posts/{post.userId}/{responseContent + 1}/", new Posts
+
+                        var newPostId = Guid.NewGuid().ToString();
+                            var setUserPost = await client.SetAsync($"Posts/{post.userId}/{newPostId}/", new Posts
                             {
                                 CreatorFullName = post.creatorFullName,
                                 Description = post.description,
@@ -50,8 +36,8 @@ namespace EduRateApi.Controllers
                                 FundraisingId = post.fundraisingId,
                                 AttachedPhotos = post.attachedPhotos,
                             });
-                            return new CreatePostResponseDto((responseContent + 1).ToString(), post.attachedPhotos);
-                        }
+                           return new CreatePostResponseDto(newPostId, post.attachedPhotos);
+                        
                     }
                     else
                     {
