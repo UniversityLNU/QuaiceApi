@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Runtime.Serialization;
 
-namespace EduRateApi.Dtos.Fundraising
+namespace EduRateApi.Dtos.FundraisingDTO
 {
     public class FundraisingDto
     {
@@ -18,6 +19,16 @@ namespace EduRateApi.Dtos.Fundraising
 
     public enum FundraisingType
     {
-        Military , Humanitarian
+        [EnumMember(Value = "Medical")]
+        Medical,
+
+        [EnumMember(Value = "Clothes")]
+        Clothes,
+
+        [EnumMember(Value = "Equipment")]
+        Equipment,
+
+        [EnumMember(Value = "Army")]
+        Army
     }
 }

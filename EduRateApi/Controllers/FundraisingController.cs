@@ -1,10 +1,11 @@
 ﻿using EduRateApi.Dtos;
-using EduRateApi.Dtos.Fundraising;
+using EduRateApi.Dtos.FundraisingDTO;
 using EduRateApi.Models;
 using FireSharp.Config;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
@@ -117,7 +118,7 @@ namespace EduRateApi.Controllers
         }
 
         [HttpGet("GetAllFundraisings")]
-        public async Task<ActionResult<List<Fundraising>>> GetAllFundraisings()
+        public async Task<ActionResult<AllFundraisingResponse>> GetAllFundraisings()
         {
             try
             {
@@ -135,12 +136,12 @@ namespace EduRateApi.Controllers
                             // Якщо записи існують, отримуємо їх та повертаємо список об'єктів Fundraising
                             var data = response.ResultAs<Dictionary<string, Fundraising>>();
                             var fundraisings = data.Values.ToList();
-                            return Ok(fundraisings);
+                            return new AllFundraisingResponse(fundraising: fundraisings);
                         }
                         else
                         {
                             // Якщо записів немає, повертаємо порожній список
-                            return Ok(new List<Fundraising>());
+                            return new AllFundraisingResponse(fundraising: new List<Fundraising>());
                         }
                     }
                     else
