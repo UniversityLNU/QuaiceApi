@@ -37,16 +37,18 @@ namespace EduRateApi.Controllers
             {
                 FirebaseAuthProvider firebaseAuthProvider = new FirebaseAuthProvider(new Firebase.Auth.FirebaseConfig(API_KEY));
 
-                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.CreateUserWithEmailAndPasswordAsync(model.userEmail, model.password);
+                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.CreateUserWithEmailAndPasswordAsync(model.email, model.password);
 
                 Console.WriteLine(firebaseAuthLink.FirebaseToken);
 
                 // Створення об'єкта користувача з базовою інформацією
                 Models.User user = new Models.User
                 {
-                    UserId = firebaseAuthLink.User.LocalId,
-                    Email = model.userEmail
-                    // Додайте інші необхідні поля тут
+                    userId = firebaseAuthLink.User.LocalId,
+                    email = model.email,
+                    fullName = model.fullName,
+                    phoneNumber = model.phoneNumber
+
                 };
 
                 // Виклик функції для створення папки користувача
@@ -85,12 +87,12 @@ namespace EduRateApi.Controllers
 
 
         [HttpPost("login")]
-        public async Task<LoginResponse> LoginUserAsync([FromBody] UserRegisterDTO model)
+        public async Task<LoginResponse> LoginUserAsync([FromBody] UserLoginDTO model)
         {
             try
             {
                 FirebaseAuthProvider firebaseAuthProvider = new FirebaseAuthProvider(new Firebase.Auth.FirebaseConfig(API_KEY));
-                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.SignInWithEmailAndPasswordAsync(model.userEmail, model.password);
+                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.SignInWithEmailAndPasswordAsync(model.email, model.password);
 
                 // Отримуємо токен доступу
                 string firebaseToken = firebaseAuthLink.FirebaseToken;
@@ -133,14 +135,14 @@ namespace EduRateApi.Controllers
                     if (client != null)
                     {
                         // Створення нової папки користувача в базі даних
-                        var setResponse = await client.SetAsync($"Users/{user.UserId}", user);
+                        var setResponse = await client.SetAsync($"Users/{user.userId}", user);
                         if (setResponse.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            Console.WriteLine($"User folder for user with ID {user.UserId} created successfully");
+                            Console.WriteLine($"User folder for user with ID {user.userId} created successfully");
                         }
                         else
                         {
-                            Console.WriteLine($"Failed to create user folder for user with ID {user.UserId}");
+                            Console.WriteLine($"Failed to create user folder for user with ID {user.userId}");
                         }
                     }
                     else
