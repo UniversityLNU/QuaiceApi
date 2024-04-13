@@ -1,4 +1,4 @@
-﻿namespace EduRateApi.Dtos
+﻿namespace EduRateApi.Dtos.AuthDTO
 {
     public class UserLoginDTO
     {
