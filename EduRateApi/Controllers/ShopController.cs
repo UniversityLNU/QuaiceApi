@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using System.Reflection;
 
 namespace EduRateApi.Controllers
 {
@@ -17,9 +18,9 @@ namespace EduRateApi.Controllers
     public class ShopController : ControllerBase
     {
         private readonly IShopService _shopService;
-        public ShopController(IShopService shopService)
+        public ShopController(IShopService shop)
         {
-            _shopService = shopService;
+            _shopService= shop;
         }
 
         [HttpGet("GetShopItemById/{itemId}")]
@@ -36,7 +37,7 @@ namespace EduRateApi.Controllers
             return StatusCode((int)response.statusCode, response);
         }
 
-        [HttpPut("BuyItemInShop")]
+        [HttpPost("BuyItemInShop")]
         public async Task<ActionResult<ServerResponse>> BuyItemInShop([FromBody] BuyShopItemDto itemDto)
         {
             var response = await _shopService.BuyItemInShop(itemDto);

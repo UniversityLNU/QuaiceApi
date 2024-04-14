@@ -5,6 +5,7 @@
 
 # User-specific files
 firebasePrivateKey.json
+mailConfig.json
 *.rsuser
 *.suo
 *.user
@@ -362,3 +363,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/EduRateApi/Config/mailConfig.json

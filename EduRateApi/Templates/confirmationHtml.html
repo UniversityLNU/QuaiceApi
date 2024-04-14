@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Confirmation</title>
+    <style>
+        body {
+            background-color: #f9f9f9; 
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>Dear <span class="highlight">{{UserFullName}}</span>,</p>
+        <p>Your request <span>{{FundraisingTitle}}</span> has been successfully processed.</p>
+
+        <p>If you have any further questions or concerns, feel free to contact us.</p>
+        <p>Thank you!</p>
+    </div>
+</body>
+</html>

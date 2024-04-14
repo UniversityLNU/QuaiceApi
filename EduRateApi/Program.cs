@@ -26,6 +26,8 @@ builder.Services.AddScoped<IFundraisingService, FundraisingService>();
 builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddScoped<IShopService, ShopService>();
+
+builder.Services.AddScoped<IMailService, MailServer>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

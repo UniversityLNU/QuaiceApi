@@ -6,6 +6,8 @@ namespace EduRateApi.Models
     {
         public string fundraisingId {  get; set; }
 
+        public string userName { get; set; }
+
         public string title { get; set; }
         public string phoneNumber { get; set; }
         public string email { get; set; }
