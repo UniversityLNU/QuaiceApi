@@ -9,6 +9,8 @@ namespace EduRateApi.Models
         public double price { get; set;}
         public string description { get; set;}
 
+        public string itemImage {  get; set;}
+
         public int itemCount { get; set; }
 
         public bool disabled { get; set;}
