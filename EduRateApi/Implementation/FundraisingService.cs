@@ -47,7 +47,7 @@ namespace EduRateApi.Implementation
                                          response1.fundraising.userName,
                                          response1.fundraising.email,
                                          response1.fundraising.title,
-                                         File.ReadAllText("C:\\Users\\roman\\Source\\Repos\\QuaiceApi1\\EduRateApi\\Templates\\confirmationHtml.html")
+                                         File.ReadAllText("Templates/confirmationHtml.html")
                                     ));
                                     return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} approved successfully", statusCode: 200);
                                 }
@@ -58,7 +58,7 @@ namespace EduRateApi.Implementation
                                          response1.fundraising.userName,
                                          response1.fundraising.email,
                                          response1.fundraising.title,
-                                         File.ReadAllText("C:\\Users\\roman\\Source\\Repos\\QuaiceApi1\\EduRateApi\\Templates\\rejectionHtml.html")
+                                         File.ReadAllText("Templates/rejectionHtml.html")
                                     ));
                                     return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} declined successfully", statusCode: 200);
                                 }
@@ -153,7 +153,7 @@ namespace EduRateApi.Implementation
             }
         }
 
-        public async Task<AllFundraisingResponse> GetAllPendingFundraising()
+        public async Task<AllFundraisingResponse> GetAllPendingFundraising() 
         {
             try
             {
