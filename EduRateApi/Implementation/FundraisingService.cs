@@ -15,7 +15,7 @@ namespace EduRateApi.Implementation
         {
             _firebaseConnectingService = firebaseConnectingService;
         }
-        public async Task<ServerResponse> ApproveFundraising(string fundraisingId)
+        public async Task<ServerResponse> ApproveDeclineFundraising(ChangeStatusResponse changeStatusResponse)
         {
             try
             {
@@ -23,30 +23,34 @@ namespace EduRateApi.Implementation
                 {
                     if (client != null)
                     {
-                        var response = await client.GetAsync($"Fundraising/{fundraisingId}");
-                        if (response.Body != "null") // якщо не null, то запис існує у базі даних
+                        var response = await client.GetAsync($"Fundraising/{changeStatusResponse.fundraisingId}");
+                        if (response.Body != "null")
                         {
-                            // Зчитуємо Fundraising з бази даних
                             var fundraising = response.ResultAs<Fundraising>();
 
-                            // Змінюємо isApproved на true
-                            fundraising.іsApproved = true;
+                            if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
+                                fundraising.status = FundraisingStatus.Approved;
 
-                            // Оновлюємо Fundraising в базі даних
-                            var updateResponse = await client.UpdateAsync($"Fundraising/{fundraisingId}", fundraising);
+                            if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
+                                fundraising.status = FundraisingStatus.Decline;
+
+                            var updateResponse = await client.UpdateAsync($"Fundraising/{changeStatusResponse.fundraisingId}", fundraising);
 
                             if (updateResponse.StatusCode == HttpStatusCode.OK)
                             {
-                                return new ServerResponse(message: $"Fundraising {fundraisingId} approved successfully", statusCode: 200);
+                                if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
+                                    return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} approved successfully", statusCode: 200);
+                                else if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
+                                    return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} declined successfully", statusCode: 200);
                             }
                             else
                             {
-                                return new ServerResponse(message: $"Failed to approve fundraising {fundraisingId}", statusCode: 400);
+                                return new ServerResponse(message: $"Failed to update fundraising {changeStatusResponse.fundraisingId}", statusCode: 400);
                             }
                         }
                         else
                         {
-                            return new ServerResponse(message: $"Fundraising {fundraisingId} not found", statusCode: 404);
+                            return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} not found", statusCode: 404);
                         }
                     }
                     else
@@ -57,8 +61,10 @@ namespace EduRateApi.Implementation
             }
             catch (Exception ex)
             {
-                return new ServerResponse(message: $"An error occurred while approving fundraising: {ex.Message}", statusCode: 500);
+                return new ServerResponse(message: $"An error occurred while approving or declining fundraising: {ex.Message}", statusCode: 500);
             }
+
+            return new ServerResponse(message: "Unhandled error occurred", statusCode: 500);
         }
 
         public async Task<AllFundraisingResponse> GetAllApprovedFundraisings()
@@ -74,7 +80,7 @@ namespace EduRateApi.Implementation
                         {
                             var data = response.ResultAs<Dictionary<string, Fundraising>>();
 
-                            var approvedFundraisings = data.Values.Where(f => f.іsApproved).ToList();
+                            var approvedFundraisings = data.Values.Where(f => f.status == FundraisingStatus.Approved).ToList();
 
                             return new AllFundraisingResponse(fundraising: approvedFundraisings, message: "OK", statusCode: 200);
                         }
@@ -126,7 +132,7 @@ namespace EduRateApi.Implementation
             }
         }
 
-        public async Task<AllFundraisingResponse> GetUnapprovedFundraisings()
+        public async Task<AllFundraisingResponse> GetAllPendingFundraising()
         {
             try
             {
@@ -140,26 +146,23 @@ namespace EduRateApi.Implementation
  
                             var data = response.ResultAs<Dictionary<string, Fundraising>>();
         
-                            var unapprovedFundraisings = data.Values.Where(f => !f.іsApproved).ToList();
+                            var unapprovedFundraisings = data.Values.Where(f => f.status == FundraisingStatus.Pending).ToList();
 
                             return new AllFundraisingResponse(fundraising: unapprovedFundraisings , message:"OK", statusCode:200);
                         }
                         else
                         {
-                            // Якщо записів немає, повертаємо порожній список
                             return new AllFundraisingResponse(fundraising: new List<Fundraising>(), message: "OK , but 0 object", statusCode: 200);
                         }
                     }
                     else
                     {
-                        // Повертаємо помилку, якщо відсутнє з'єднання з Firebase
                         return new AllFundraisingResponse(fundraising: new List<Fundraising>(), message: "BAD", statusCode: 400);
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Перехоплення та повернення винятку
                 return new AllFundraisingResponse(fundraising: new List<Fundraising>(), message: "BAD", statusCode: 400);
             }
         }
@@ -187,7 +190,7 @@ namespace EduRateApi.Implementation
                             fundraisingCompany = fundraisingDto.fundraisingCompany,
                             goal = fundraisingDto.goal,
                             fundraisingType = fundraisingDto.fundraisingType,
-                            іsApproved = false
+                            status = FundraisingStatus.Pending
                         };
 
                         var setResponse = await client.SetAsync($"Fundraising/{fundraising.fundraisingId}", fundraising);

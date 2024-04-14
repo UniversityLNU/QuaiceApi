@@ -3,7 +3,6 @@ using EduRateApi.Implementation;
 using EduRateApi.Interfaces;
 using EduRateApi.Models;
 using FirebaseAdmin;
-using FirebaseAdminAuthentication.DependencyInjection.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,15 +12,10 @@ using Microsoft.Identity.Web;
 var policy = "MyPolicy";
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme, (o) => { });
 
 builder.Services.AddSingleton(FirebaseApp.Create());
 
 builder.Services.AddScoped<IFirebaseConnectingService, FirebaseConnectingService>();
-
-builder.Services.AddScoped<FirebaseAuthenticationFunctionHandler>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -30,6 +24,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFundraisingService, FundraisingService>();
 
 builder.Services.AddScoped<IPostService, PostService>();
+
+builder.Services.AddScoped<IShopService, ShopService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

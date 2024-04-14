@@ -56,11 +56,11 @@ namespace EduRateApi.Implementation
 
                     await UpdateShopItem(shopItem);
 
-                    return new LoginResponse(message: "Successfully bought", statusCode: 200);
+                    return new ServerResponse(message: "Successfully bought", statusCode: 200);
                 }
                 else
                 {
-                    return new LoginResponse(message: $"Insufficient coins to buy {shopItem.price} ", statusCode: 200);
+                    return new ServerResponse(message: $"Insufficient coins to buy {shopItem.price} ", statusCode: 200);
                 }
             }
             catch (Exception ex)

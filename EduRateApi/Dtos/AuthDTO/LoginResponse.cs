@@ -1,6 +1,6 @@
 ﻿using EduRateApi.Models;
 
-namespace EduRateApi.Dtos
+namespace EduRateApi.Dtos.AuthDTO
 {
     public class LoginResponse : ServerResponse
     {
@@ -10,7 +10,7 @@ namespace EduRateApi.Dtos
 
         public LoginResponse(int statusCode, string message, string jwtToken, string userId) : base(message, statusCode)
         {
-           this.jwtToken = jwtToken;
+            this.jwtToken = jwtToken;
             this.userId = userId;
         }
 
