@@ -14,7 +14,12 @@ namespace EduRateApi.Implementation
     {
         public void SendMail(SendMailDTO sendMail)
         {
-            Configuration.Default.ApiKey.Add("api-key", "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");
+            string apiKeyFilePath = "C:\\Users\\roman\\source\\repos\\QuaiceApi1\\QuaiceApi1\\EduRateApi\\Config\\mailConfig.json";
+            string apiKeyJson = File.ReadAllText(apiKeyFilePath);
+            var apiKeyObject = JObject.Parse(apiKeyJson);
+            string apiKey = apiKeyObject["API_KEY"].ToString();
+
+            Configuration.Default.ApiKey.Add("api-key", apiKey);
 
             var apiInstance = new TransactionalEmailsApi();
             string SenderName = "John Doe";
