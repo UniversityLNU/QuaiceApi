@@ -188,6 +188,7 @@ namespace EduRateApi.Implementation
                             description = item.description,
                             title = item.title,
                             itemCount = item.itemCount,
+                            itemImage = item.itemImage,
                             disabled = false
                         });
                         return new ServerResponse(message: "Item Succesfully Uploaded", statusCode: 200);
