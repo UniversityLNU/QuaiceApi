@@ -43,18 +43,18 @@ namespace EduRateApi.Controllers
             return StatusCode((int)response.statusCode, response);
         }
 
-        [HttpGet("GetUnapprovedFundraisings")]
-        public async Task<ActionResult<List<Fundraising>>> GetUnapprovedFundraisings()
+        [HttpGet("GetAllPendingFundraising")]
+        public async Task<ActionResult<List<Fundraising>>> GetAllPendingFundraising()
         {
-            var response = await _fundraisingService.GetUnapprovedFundraisings();
+            var response = await _fundraisingService.GetAllPendingFundraising();
             return StatusCode((int)response.statusCode, response);
         }
 
 
-        [HttpPut("ApproveFundraising/{fundraisingId}")]
-        public async Task<ActionResult> ApproveFundraising(string fundraisingId)
+        [HttpPut("ApproveDeclineFundraising")]
+        public async Task<ActionResult> ApproveDeclineFundraising([FromBody] ChangeStatusResponse status)
         {
-            var response = await _fundraisingService.ApproveFundraising(fundraisingId);
+            var response = await _fundraisingService.ApproveDeclineFundraising(status);
             return StatusCode((int)response.statusCode, response);
         }
     }
