@@ -26,9 +26,11 @@ namespace EduRateApi.Controllers
     {
        
         private readonly IAuthService _authService;
-        public UserController(IAuthService authService)
+        private readonly IUserService _userService;
+        public UserController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost("register")]
@@ -49,6 +51,13 @@ namespace EduRateApi.Controllers
         public async Task<ActionResult<ServerResponse>> GetUserInfoAsync(string firebaseToken)
         {
             var response = await _authService.GetUserInfoAsync(firebaseToken);
+            return StatusCode((int)response.statusCode, response);
+        }
+
+        [HttpGet("GetUser")]
+        public async Task<ActionResult<ServerResponse>> GetUser(string userId)
+        {
+            var response = await _userService.GetUserById(userId);
             return StatusCode((int)response.statusCode, response);
         }
 
