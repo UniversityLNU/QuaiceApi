@@ -49,13 +49,6 @@ namespace EduRateApi.Implementation
             string ReplyToName = "John Doe";
             string ReplyToEmail = "replyto@domain.com";
             SendSmtpEmailReplyTo ReplyTo = new SendSmtpEmailReplyTo(ReplyToEmail, ReplyToName);
-            string AttachmentUrl = null;
-            string stringInBase64 = "aGVsbG8gdGhpcyBpcyB0ZXN0";
-            byte[] Content = System.Convert.FromBase64String(stringInBase64);
-            string AttachmentName = "test.txt";
-            SendSmtpEmailAttachment AttachmentContent = new SendSmtpEmailAttachment(AttachmentUrl, Content, AttachmentName);
-            List<SendSmtpEmailAttachment> Attachment = new List<SendSmtpEmailAttachment>();
-            Attachment.Add(AttachmentContent);
             JObject Headers = new JObject();
             Headers.Add("Some-Custom-Name", "unique-id-1234");
             long? TemplateId = null;
@@ -76,16 +69,16 @@ namespace EduRateApi.Implementation
             try
             {
                 var sendSmtpEmail = new SendSmtpEmail(Email, To, Bcc, Cc, htmlContent, TextContent, Subject, ReplyTo, null, Headers, TemplateId, Params, messageVersiopns, Tags);
-                CreateSmtpEmail result = apiInstance.SendTransacEmail(sendSmtpEmail);
-                Debug.WriteLine(result.ToJson());
-                Console.WriteLine(result.ToJson());
-                Console.ReadLine();
+                CreateSmtpEmail result =  apiInstance.SendTransacEmail(sendSmtpEmail);
+
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
+
+            }
+            finally
+            {
+   
             }
         }
 

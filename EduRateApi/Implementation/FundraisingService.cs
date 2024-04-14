@@ -54,7 +54,7 @@ namespace EduRateApi.Implementation
                                    
                                 else if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
                                 {
-                                            _MailService.SendMail(new SendMailDTO(
+                                             _MailService.SendMail(new SendMailDTO(
                                          response1.fundraising.userName,
                                          response1.fundraising.email,
                                          response1.fundraising.title,
