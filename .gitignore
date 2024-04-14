@@ -5,6 +5,7 @@
 
 # User-specific files
 firebasePrivateKey.json
+mailConfig.json
 *.rsuser
 *.suo
 *.user
