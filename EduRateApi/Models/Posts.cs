@@ -11,6 +11,5 @@
 
         public List<string> attachedPhotos { get; set; }
 
-       
     }
 }

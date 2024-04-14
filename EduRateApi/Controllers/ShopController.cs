@@ -22,13 +22,6 @@ namespace EduRateApi.Controllers
             _shopService = shopService;
         }
 
-        [HttpPost("UploadItemInShop")]
-        public async Task<ActionResult<ServerResponse>> UploadItemInShop([FromBody] ShopItemDto item)
-        {
-            var response = await _shopService.UploadItemInShop(item);
-            return StatusCode((int)response.statusCode, response);
-        }
-
         [HttpGet("GetShopItemById/{itemId}")]
         public async Task<ActionResult<ShopResponse>> GetShopItemById(string itemId)
         {

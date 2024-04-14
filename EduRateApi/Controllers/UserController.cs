@@ -58,11 +58,11 @@ namespace EduRateApi.Controllers
             return StatusCode((int)response.statusCode, response);
         }
 
-        [HttpGet("GetUser")]
+        [HttpGet("GetUser/{userId}")]
         public async Task<ActionResult<UserResponse>> GetUser(string userId)
         {
             var response = await _userService.GetUserById(userId);
-            return StatusCode((int)response.statusCode, response);
+            return Ok(response.user);
         }
 
 
