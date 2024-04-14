@@ -16,7 +16,11 @@ using EduRateApi.Models;
 using FirebaseAuthException = Firebase.Auth.FirebaseAuthException;
 using System.Net;
 using EduRateApi.Interfaces;
+
+using EduRateApi.Dtos.UserDtos;
+
 using EduRateApi.Dtos.AuthDTO;
+
 
 namespace EduRateApi.Controllers
 {
@@ -55,7 +59,7 @@ namespace EduRateApi.Controllers
         }
 
         [HttpGet("GetUser")]
-        public async Task<ActionResult<ServerResponse>> GetUser(string userId)
+        public async Task<ActionResult<UserResponse>> GetUser(string userId)
         {
             var response = await _userService.GetUserById(userId);
             return StatusCode((int)response.statusCode, response);
