@@ -1,4 +1,5 @@
 ﻿
+using EduRateApi.Dtos;
 using EduRateApi.Dtos.FundraisingDTO;
 using EduRateApi.Interfaces;
 using EduRateApi.Models;
@@ -11,9 +12,11 @@ namespace EduRateApi.Implementation
     public class FundraisingService : IFundraisingService
     {
         private readonly IFirebaseConnectingService _firebaseConnectingService;
-        public FundraisingService(IFirebaseConnectingService firebaseConnectingService)
+        private readonly IMailService _MailService;
+        public FundraisingService(IFirebaseConnectingService firebaseConnectingService, IMailService mashMailService)
         {
             _firebaseConnectingService = firebaseConnectingService;
+            _MailService = mashMailService;
         }
         public async Task<ServerResponse> ApproveDeclineFundraising(ChangeStatusResponse changeStatusResponse)
         {
@@ -30,18 +33,36 @@ namespace EduRateApi.Implementation
 
                             if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
                                 fundraising.status = FundraisingStatus.Approved;
-
+                           
                             if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
                                 fundraising.status = FundraisingStatus.Decline;
 
                             var updateResponse = await client.UpdateAsync($"Fundraising/{changeStatusResponse.fundraisingId}", fundraising);
-
+                            FundraisingResponse response1 = await GetFundraisingById(changeStatusResponse.fundraisingId);
                             if (updateResponse.StatusCode == HttpStatusCode.OK)
                             {
                                 if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
+                                {
+                                            _MailService.SendMail(new SendMailDTO(
+                                         response1.fundraising.userName,
+                                         response1.fundraising.email,
+                                         response1.fundraising.title,
+                                         File.ReadAllText("C:\\Users\\roman\\Source\\Repos\\QuaiceApi1\\EduRateApi\\Templates\\confirmationHtml.html")
+                                    ));
                                     return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} approved successfully", statusCode: 200);
+                                }
+                                   
                                 else if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
+                                {
+                                            _MailService.SendMail(new SendMailDTO(
+                                         response1.fundraising.userName,
+                                         response1.fundraising.email,
+                                         response1.fundraising.title,
+                                         File.ReadAllText("C:\\Users\\roman\\Source\\Repos\\QuaiceApi1\\EduRateApi\\Templates\\rejectionHtml.html")
+                                    ));
                                     return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} declined successfully", statusCode: 200);
+                                }
+                                    
                             }
                             else
                             {
@@ -183,6 +204,7 @@ namespace EduRateApi.Implementation
                         {
                             fundraisingId = fundraisingId,
                             phoneNumber = fundraisingDto.phoneNumber,
+                            userName = fundraisingDto.userName,
                             email = fundraisingDto.email,
                             title = fundraisingDto.title,
                             fundraisingUrl = fundraisingDto.fundraisingUrl,
