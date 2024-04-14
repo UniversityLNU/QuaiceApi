@@ -18,6 +18,7 @@ namespace EduRateApi.Models
 
         public string fundraisingType { get; set; }
 
-        public bool іsApproved { get; set; }
+        public FundraisingStatus status { get; set; }
+
     }
 }
