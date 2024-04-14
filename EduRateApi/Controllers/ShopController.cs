@@ -43,5 +43,12 @@ namespace EduRateApi.Controllers
             var response = await _shopService.BuyItemInShop(itemDto);
             return StatusCode((int)response.statusCode, response);
         }
+
+        [HttpPost("UploadShopItem")]
+        public async Task<ActionResult<ServerResponse>> UploadShopItem([FromBody] ShopItemDto itemDto)
+        {
+            var response = await _shopService.UploadItemInShop(itemDto);
+            return StatusCode((int)response.statusCode, response);
+        }
     }
 }
