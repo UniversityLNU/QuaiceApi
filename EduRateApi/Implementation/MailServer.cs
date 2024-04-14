@@ -19,7 +19,10 @@ namespace EduRateApi.Implementation
             var apiKeyObject = JObject.Parse(apiKeyJson);
             string apiKey = apiKeyObject["API_KEY"].ToString();
 
-            Configuration.Default.ApiKey.Add("api-key", apiKey);
+            if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
+            {
+                Configuration.Default.ApiKey.Add("api-key", apiKey);
+            }
 
             var apiInstance = new TransactionalEmailsApi();
             string SenderName = "John Doe";
@@ -70,7 +73,6 @@ namespace EduRateApi.Implementation
             {
                 var sendSmtpEmail = new SendSmtpEmail(Email, To, Bcc, Cc, htmlContent, TextContent, Subject, ReplyTo, null, Headers, TemplateId, Params, messageVersiopns, Tags);
                 CreateSmtpEmail result =  apiInstance.SendTransacEmail(sendSmtpEmail);
-
             }
             catch (Exception e)
             {
