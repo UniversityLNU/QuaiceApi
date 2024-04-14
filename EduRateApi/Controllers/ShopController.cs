@@ -17,11 +17,6 @@ namespace EduRateApi.Controllers
     [ApiController]
     public class ShopController : ControllerBase
     {
-        private readonly IShopService _shopService;
-        public ShopController(IShopService shop)
-        {
-            _shopService = shop;
-        }
 
         [HttpPost("UploadItemInShop")]
         public async Task<ActionResult<ServerResponse>> UploadItemInShop([FromBody] ShopItemDto item)
@@ -31,7 +26,7 @@ namespace EduRateApi.Controllers
         }
 
         [HttpGet("GetShopItemById/{itemId}")]
-        public async Task<ActionResult<ServerResponse>> GetShopItemById(string itemId)
+        public async Task<ShopItem> GetShopItemById(string itemId)
         {
             var response = await _shopService.GetShopItemById(itemId);
             return StatusCode((int)response.statusCode, response);
@@ -44,12 +39,35 @@ namespace EduRateApi.Controllers
             return StatusCode((int)response.statusCode, response);
         }
 
+                            return activeShopItems;
+                        }
+                        else
+                        {
+                            // Якщо записів немає, повертаємо порожній список
+                            return new List<ShopItem>();
+                        }
+                    }
+                    else
+                    {
+                        // Повертаємо помилку, якщо відсутнє з'єднання з Firebase
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Повертаємо повідомлення про помилку у разі виникнення виключення
+                return null;
+            }
+        }
+
+
+
         [HttpPost("BuyItemInShop")]
         public async Task<ActionResult<ServerResponse>> BuyItemInShop([FromBody] BuyShopItemDto itemDto)
         {
             var response = await _shopService.BuyItemInShop(itemDto);
             return StatusCode((int)response.statusCode, response);
         }
-
     }
 }

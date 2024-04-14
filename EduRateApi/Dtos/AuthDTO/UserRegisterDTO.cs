@@ -1,8 +1,8 @@
-﻿namespace EduRateApi.Dtos
+﻿namespace EduRateApi.Dtos.AuthDTO
 {
     public class UserRegisterDTO
     {
-        public string email {  get; set; }
+        public string email { get; set; }
         public string password { get; set; }
 
         public string fullName { get; set; }

@@ -1,5 +1,4 @@
-﻿using EduRateApi.Dtos;
-using FireSharp.Config;
+﻿using FireSharp.Config;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -17,7 +16,11 @@ using EduRateApi.Models;
 using FirebaseAuthException = Firebase.Auth.FirebaseAuthException;
 using System.Net;
 using EduRateApi.Interfaces;
+
 using EduRateApi.Dtos.UserDtos;
+
+using EduRateApi.Dtos.AuthDTO;
+
 
 namespace EduRateApi.Controllers
 {

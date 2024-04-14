@@ -1,4 +1,4 @@
-﻿using EduRateApi.Dtos;
+﻿using EduRateApi.Dtos.AuthDTO;
 using EduRateApi.Interfaces;
 using EduRateApi.Models;
 using Firebase.Auth;
@@ -118,11 +118,7 @@ namespace EduRateApi.Implementation
         {
             try
             {
-                var firebaseConfigPath = "Config/firebaseConfig.json";
-                var configJson = System.IO.File.ReadAllText(firebaseConfigPath);
-                var config = JsonConvert.DeserializeObject<FireSharp.Config.FirebaseConfig>(configJson);
-
-                using (var client = new FireSharp.FirebaseClient(config))
+                using (var client = _connectingService.GetFirebaseClient())
                 {
                     if (client != null)
                     {
