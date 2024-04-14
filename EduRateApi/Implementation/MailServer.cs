@@ -14,7 +14,7 @@ namespace EduRateApi.Implementation
     {
         public void SendMail(SendMailDTO sendMail)
         {
-            string apiKeyFilePath = "C:\\Users\\roman\\source\\repos\\QuaiceApi1\\QuaiceApi1\\EduRateApi\\Config\\mailConfig.json";
+            string apiKeyFilePath = "Config/mailConfig.json";
             string apiKeyJson = File.ReadAllText(apiKeyFilePath);
             var apiKeyObject = JObject.Parse(apiKeyJson);
             string apiKey = apiKeyObject["API_KEY"].ToString();
