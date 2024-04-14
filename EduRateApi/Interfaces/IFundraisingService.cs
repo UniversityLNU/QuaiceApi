@@ -9,6 +9,6 @@ namespace EduRateApi.Interfaces
         Task<FundraisingResponse> GetFundraisingById(string fundraisingId);
         Task<AllFundraisingResponse> GetAllApprovedFundraisings();
         Task<AllFundraisingResponse> GetAllPendingFundraising();
-        Task<ServerResponse> ApproveDeclineFundraising(string fundraisingId, FundraisingStatus status);
+        Task<ServerResponse> ApproveDeclineFundraising(ChangeStatusResponse status);
     }
 }

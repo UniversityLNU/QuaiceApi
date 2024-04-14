@@ -15,7 +15,7 @@ namespace EduRateApi.Implementation
         {
             _firebaseConnectingService = firebaseConnectingService;
         }
-        public async Task<ServerResponse> ApproveDeclineFundraising(string fundraisingId , FundraisingStatus status)
+        public async Task<ServerResponse> ApproveDeclineFundraising(ChangeStatusResponse changeStatusResponse)
         {
             try
             {
@@ -23,31 +23,34 @@ namespace EduRateApi.Implementation
                 {
                     if (client != null)
                     {
-                        var response = await client.GetAsync($"Fundraising/{fundraisingId}");
+                        var response = await client.GetAsync($"Fundraising/{changeStatusResponse.fundraisingId}");
                         if (response.Body != "null")
                         {
                             var fundraising = response.ResultAs<Fundraising>();
 
-                            if (status == FundraisingStatus.Approved)
+                            if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
                                 fundraising.status = FundraisingStatus.Approved;
 
-                            if (status == FundraisingStatus.Decline)
+                            if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
                                 fundraising.status = FundraisingStatus.Decline;
 
-                            var updateResponse = await client.UpdateAsync($"Fundraising/{fundraisingId}", fundraising);
+                            var updateResponse = await client.UpdateAsync($"Fundraising/{changeStatusResponse.fundraisingId}", fundraising);
 
                             if (updateResponse.StatusCode == HttpStatusCode.OK)
                             {
-                                return new ServerResponse(message: $"Fundraising {fundraisingId} approved successfully", statusCode: 200);
+                                if (changeStatusResponse.newsStatus == FundraisingStatus.Approved)
+                                    return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} approved successfully", statusCode: 200);
+                                else if (changeStatusResponse.newsStatus == FundraisingStatus.Decline)
+                                    return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} declined successfully", statusCode: 200);
                             }
                             else
                             {
-                                return new ServerResponse(message: $"Failed to approve fundraising {fundraisingId}", statusCode: 400);
+                                return new ServerResponse(message: $"Failed to update fundraising {changeStatusResponse.fundraisingId}", statusCode: 400);
                             }
                         }
                         else
                         {
-                            return new ServerResponse(message: $"Fundraising {fundraisingId} not found", statusCode: 404);
+                            return new ServerResponse(message: $"Fundraising {changeStatusResponse.fundraisingId} not found", statusCode: 404);
                         }
                     }
                     else
@@ -58,8 +61,10 @@ namespace EduRateApi.Implementation
             }
             catch (Exception ex)
             {
-                return new ServerResponse(message: $"An error occurred while approving fundraising: {ex.Message}", statusCode: 500);
+                return new ServerResponse(message: $"An error occurred while approving or declining fundraising: {ex.Message}", statusCode: 500);
             }
+
+            return new ServerResponse(message: "Unhandled error occurred", statusCode: 500);
         }
 
         public async Task<AllFundraisingResponse> GetAllApprovedFundraisings()
