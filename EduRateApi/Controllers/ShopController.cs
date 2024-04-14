@@ -34,7 +34,7 @@ namespace EduRateApi.Controllers
         public async Task<ActionResult<AllShopItemResponse>> GetActiveShopItems()
         {
             var response = await _shopService.GetActiveShopItems();
-            return StatusCode((int)response.statusCode, response);
+            return Ok(response);
         }
 
         [HttpPost("BuyItemInShop")]
